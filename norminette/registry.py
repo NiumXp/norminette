@@ -40,7 +40,7 @@ class Registry:
             context.tkn_scope = 0
         return ret, read
 
-    def run(self, context, source):
+    def run(self, context):
         """
         Main function for each file.
         Primary rules are determined by the prefix "Is" and
@@ -65,7 +65,7 @@ class Registry:
                             raise CParsingError(
                                 f"Error: Unrecognized line {unrecognized_tkns[0].pos} while parsing line {unrecognized_tkns}"  # noqa: E501
                             )
-                        print("uncaught -> ", context.filename)
+                        print("uncaught -> ", context.file.path)
                         print("uncaught -> ", unrecognized_tkns)
                         unrecognized_tkns = []
                     context.dprint(rule.name, jump)
@@ -86,9 +86,9 @@ class Registry:
             if context.debug > 0:
                 print("uncaught ->", unrecognized_tkns)
         if context.errors == []:
-            print(context.filename + ": OK!")
+            print(context.file.name + context.file.type + ": OK!")
         else:
-            print(context.filename + ": Error!")
+            print(context.file.name + context.file.type + ": Error!")
             context.errors = sorted(
                 context.errors + context.warnings, key=cmp_to_key(sort_errs)
             )

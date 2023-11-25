@@ -182,22 +182,23 @@ class PreProcessors:
 
 
 class Context:
-    def __init__(self, filename, tokens, debug=0, added_value=[]):
+    def __init__(self, file, debug=0, added_value=[]):
         # Header relative informations
         self.header_started = False
         self.header_parsed = False
         self.header = ""
         # File relative informations
-        self.filename = filename
-        self.filetype = filename.split(".")[-1]  # ?
-        self.tokens = tokens
+        self.file = file
+        self.filename = file.name
+        self.filetype = file.type
+        self.tokens = list(file.tokens)
         self.debug = int(debug)
 
         # Rule relative informations
         self.history = []
         self.errors = []
         self.warnings = []
-        self.tkn_scope = len(tokens)
+        self.tkn_scope = len(file.tokens)
 
         # Scope informations
         self.scope = GlobalScope()
@@ -288,7 +289,7 @@ class Context:
         if self.debug < 2:
             return
         print(
-            f"{colors(self.filename, 'cyan')} - {colors(rule, 'green')} \
+            f"{colors(self.file.name + self.file.type, 'cyan')} - {colors(rule, 'green')} \
 In \"{self.scope.name}\" from \
 \"{self.scope.parent.name if self.scope.parent is not  None else None}\" line {self.tokens[0].pos[0]}\":"
         )

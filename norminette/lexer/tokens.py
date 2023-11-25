@@ -1,13 +1,15 @@
+from collections import namedtuple
+
+Line = namedtuple("Line", "number column")
+
+
 class Token:
     def __init__(self, tkn_type, pos, tkn_value=None):
-        self.type = str(tkn_type)
-        self.pos = pos
-        if tkn_value is not None:
-            self.value = str(tkn_value)
-            self.length = len(tkn_value)
-        else:
-            self.value = None
-            self.length = 0
+        self.type = tkn_type
+        self.pos = Line(*pos)
+
+        self.value = tkn_value
+        self.length = len(tkn_value or '')
 
     @property
     def line_column(self):

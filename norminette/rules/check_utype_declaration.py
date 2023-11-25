@@ -107,7 +107,7 @@ class CheckUtypeDeclaration(Rule, Check):
                         pass
                     elif context.debug == 0:
                         raise CParsingError(
-                            f"Error: {context.filename}: Could not parse structure line {context.peek_token(0).pos[0]}"
+                            f"Error: {context.file.path}: Could not parse structure line {context.peek_token(0).pos[0]}"
                         )
             loc = ids[0][1]
         else:
