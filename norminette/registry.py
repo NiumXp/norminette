@@ -1,4 +1,5 @@
 import collections
+from unittest.mock import patch
 from operator import attrgetter
 
 from norminette.rules import Rules, Primary
@@ -41,11 +42,20 @@ class Registry:
         Each secondary rule is then run in arbitrary order based on their
         dependencies
         """
+        context.state = "traversing"
+        if context.tree is not None:
+            
+            for rule in rules.checks:
+                if "traverse" not in rule.runs_on:
+                    continue
+                rule = rule(context)
+                rule.run(context)
+            return
         unrecognized_tkns = []
         context.state = "starting"
         for rule in self.dependencies["_start"]:
             self.run_rules(context, rule)
-        context.state = "running"
+        context.state = "checking"
         while context.tokens != []:
             context.tkn_scope = len(context.tokens)
             for rule in rules.primaries:

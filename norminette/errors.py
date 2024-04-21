@@ -172,6 +172,28 @@ class _formatter:
 
 class HumanizedErrorsFormatter(_formatter):
     def __str__(self) -> str:
+        # return ShortErrorsFormatter.__str__(self)
+        output = ''
+        for file in self.files:
+            for error in file.errors:
+                highlight = error.highlights[0]
+                # Location
+                output += f"\x1b[;97m{file.path}:{highlight.lineno}:{highlight.column}\x1b[0m"
+                output += ' ' + error.name
+                if not highlight.length:
+                    output += ' ' + error.text
+                if highlight.length:
+                    # Line
+                    output += f"\n {highlight.lineno:>5} | {file[highlight.lineno,].translated}"
+                    # Arrow
+                    output += "\n       | " + ' ' * (highlight.column - 1)
+                    output += f"\x1b[0;91m{'^' * (highlight.length or 0)} {highlight.hint or error.text}\x1b[0m"
+                output += '\n'
+        return output
+
+
+class ShortErrorsFormatter(_formatter):
+    def __str__(self) -> str:
         output = ''
         for file in self.files:
             output += f"{file.basename}: {file.errors.status}!"

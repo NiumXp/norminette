@@ -12,6 +12,8 @@ from norminette.exceptions import CParsingError
 from norminette.registry import Registry
 from norminette.context import Context
 from norminette.tools.colors import colors
+from norminette.tree import parse
+from norminette.tokens import Tokens
 
 import subprocess
 
@@ -74,6 +76,11 @@ def main():
         help="formatting style for errors",
         default="humanized",
     )
+    parser.add_argument(
+        "--experimental-tree-parser",
+        action="store_true",
+        default=False,
+    )
     parser.add_argument("-R", nargs=1, help="compatibility for norminette 2")
     args = parser.parse_args()
     registry = Registry()
@@ -128,7 +135,13 @@ def main():
         try:
             lexer = Lexer(file)
             tokens = list(lexer)
-            context = Context(file, tokens, debug, args.R)
+            tree = None
+            if args.experimental_tree_parser:
+                tree = []
+                temp = Tokens(tokens)
+                while node := parse(temp):
+                    tree.append(node)
+            context = Context(file, tokens, debug, args.R, tree)
             registry.run(context)
         except CParsingError as e:
             print(file.path + f": Error!\n\t{colors(e.msg, 'red')}")

@@ -1,9 +1,13 @@
 from dataclasses import dataclass, field
+from typing import List, Tuple, Union, Optional
 
 from norminette.exceptions import CParsingError
 from norminette.norm_error import NormError, NormWarning
 from norminette.scope import GlobalScope, ControlStructure
 from norminette.tools.colors import colors
+from norminette.file import File
+from norminette.history import History
+from norminette.lexer import Token
 
 types = [
     "CHAR",
@@ -182,18 +186,19 @@ class PreProcessors:
 
 
 class Context:
-    def __init__(self, file, tokens, debug=0, added_value=[]):
+    def __init__(self, file: File, tokens, debug=0, added_value=[], tree=None):
         # Header relative informations
         self.header_started = False
         self.header_parsed = False
         self.header = ""
         # File relative informations
         self.file = file
+        self.tree = tree
         self.tokens = tokens
         self.debug = int(debug)
 
         # Rule relative informations
-        self.history = []
+        self.history = History()
         self.errors = file.errors
         self.tkn_scope = len(tokens)
 
@@ -209,13 +214,13 @@ class Context:
         self.preproc = PreProcessors()
         self.preproc.skip_define = "CheckDefine" in (added_value or [])
 
-    def peek_token(self, pos):
+    def peek_token(self, pos: int) -> Optional[Token]:
         return self.tokens[pos] if pos < len(self.tokens) else None
 
     def pop_tokens(self, stop):
         self.tokens = self.tokens[stop:]
 
-    def check_token(self, pos, value):
+    def check_token(self, pos: int, value: Union[str, List[str], Tuple[str, ...]]) -> bool:
         """Compares the token at 'pos' against a value or list of values"""
         tkn = self.peek_token(pos)
 
@@ -241,7 +246,7 @@ class Context:
                 return i
         return -1
 
-    def new_error(self, errno, tkn):
+    def new_error(self, errno: str, tkn: Token):
         pos = tkn
         if not isinstance(tkn, (tuple, list)):
             pos = tkn.pos
@@ -316,7 +321,7 @@ In \"{self.scope.name}\" from \
             pos += 1
         return pos
 
-    def skip_ws(self, pos, nl=False, comment=False):
+    def skip_ws(self, pos: int, nl: bool = False, comment: bool = False) -> int:
         ws = whitespaces[:]
         if nl is False:
             ws.remove("NEWLINE")

@@ -2,7 +2,7 @@ from typing import Optional, Tuple
 from dataclasses import dataclass, field
 
 
-@dataclass(eq=True, repr=True)
+@dataclass(eq=True, repr=False)
 class Token:
     type: str
     pos: Tuple[int, int]
@@ -15,6 +15,9 @@ class Token:
     @property
     def line_column(self):
         return self.pos[1]
+
+    def __repr__(self) -> str:
+        return f"Token({self.type!r}, {self.pos}{'' if self.value is None else ', value=' + repr(self.value)})"
 
     def __str__(self):
         """
