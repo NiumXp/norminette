@@ -1,5 +1,20 @@
 from __future__ import annotations
 
+__all__ = (
+    "IsToken",
+    "IsNest",
+    "IsParenthesisNest",
+    "IsBraketsNest",
+    "IsBracesNest",
+    "IsWhitespace",
+    "IsAssign",
+    "IsLiteral",
+    "Echo",
+    "While",
+    "Until",
+    "Strip",
+)
+
 import itertools
 from typing import (
     TYPE_CHECKING,
@@ -73,7 +88,10 @@ class IsNest:
         self,
         opening: Union[Matcher[int], str],
         closing: Union[Matcher[int], str],
+        *,
+        recursive: bool = False,
     ) -> None:
+        self.recursive = recursive
         if isinstance(opening, str):
             opening = brackets.get(opening, opening)
             opening = IsToken(type=opening)
@@ -86,9 +104,34 @@ class IsNest:
     def __call__(self, tokens: Tokens) -> int:
         if steps := self.opening(tokens):
             tokens.skip(steps)
-            tokens.skip(Until(self.closing, exclusive=False))
+            if self.recursive:
+                depth = 1
+                while depth:
+                    if tokens.pop(self.opening):
+                        depth += 1
+                    elif tokens.pop(self.closing):
+                        depth -= 1
+                    else:
+                        tokens.skip(1)
+            else:
+                tokens.skip(Until(self.closing, exclusive=False))
             return tokens.steps
         return 0
+
+
+class IsParenthesisNest(IsNest):
+    def __init__(self, /) -> None:
+        super().__init__(*"()", recursive=True)
+
+
+class IsBraketsNest(IsNest):
+    def __init__(self, /) -> None:
+        super().__init__(*"[]", recursive=True)
+
+
+class IsBracesNest(IsNest):
+    def __init__(self, /) -> None:
+        super().__init__(*"{}", recursive=True)
 
 
 class IsWhitespace(IsToken):
@@ -119,6 +162,28 @@ class IsAssign(IsToken):
 
     def __init__(self, iterations: int = 1):
         self.iterations = iterations
+
+
+class IsLiteral(IsToken):
+    types = {"NUMBER", "STRING", "CHAR"}
+
+    def __init__(self, iterations: int = 1):
+        self.iterations = iterations
+
+
+class IsTypeIdentifier:
+
+
+
+class IsTypeExpressions:
+    def __call__(self, tokens: Tokens) -> int:
+
+
+
+class IsExpression:
+    def __call__(self, tokens: Tokens) -> int:
+        with tokens as t:
+
 
 
 class Echo(Generic[T]):
