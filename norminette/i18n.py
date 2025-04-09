@@ -21,7 +21,7 @@ LOCALE_DIR = Path(__file__).parent / "locale"
 DOMAIN = "norminette"
 
 # Default fallback
-_ = lambda _: _
+_ = lambda _: _  # noqa: E731
 
 
 def set_locale(locale: str) -> None:
