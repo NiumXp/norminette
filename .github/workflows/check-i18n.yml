@@ -1,9 +1,6 @@
 name: Check I18N Changes
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches:
       - master
@@ -15,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y gettext
@@ -36,9 +35,9 @@ jobs:
 
       - name: Check for changes in .po files
         run: |
-          if git diff HEAD --ignore-matching-lines='^"POT-Creation-Date:' -- '*.po' | grep -P '^[+-](?![+-]{2} [ab]/)' > /dev/null; then
-            echo "Meaningful I18N changes detected. Please run 'python -m norminette.i18n' and commit the changes."
-            git diff HEAD --ignore-matching-lines='^"POT-Creation-Date:' -- '*.po'
+          if git diff --ignore-matching-lines='^"POT-Creation-Date:' -- '*.po' | grep -P '^[+-](?![+-]{2} [ab]/)' > /dev/null; then
+            echo "Meaningful I18N changes detected. Please run 'python -m norminette/i18n.py' and commit the changes."
+            git diff -- '*.po'
             exit 1
           else
               echo "No changes detected in I18N files."
