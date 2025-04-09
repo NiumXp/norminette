@@ -3,6 +3,7 @@ import subprocess
 import sys
 from pathlib import Path
 from importlib.metadata import version
+from typing import List
 
 
 __all__ = (
@@ -69,7 +70,7 @@ def _get_pot_file_path() -> Path:
     return LOCALE_DIR / f"{DOMAIN}.pot"
 
 
-def _collect_python_files(root_dir: Path) -> list[Path]:
+def _collect_python_files(root_dir: Path) -> List[Path]:
     """
     Collect all Python source files from the given root directory.
     """

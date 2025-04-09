@@ -38,6 +38,7 @@ jobs:
         run: |
           if git diff HEAD --ignore-matching-lines='^"POT-Creation-Date:' -- '*.po' | grep -P '^[+-](?![+-]{2} [ab]/)' > /dev/null; then
             echo "Meaningful I18N changes detected. Please run 'python -m norminette.i18n' and commit the changes."
+            git diff HEAD --ignore-matching-lines='^"POT-Creation-Date:' -- '*.po'
             exit 1
           else
               echo "No changes detected in I18N files."
