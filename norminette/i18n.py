@@ -92,7 +92,7 @@ def _create_pot_file() -> None:
                 str(_get_pot_file_path()),
                 "--from-code=UTF-8",
                 "--keyword=_",
-            ] + [str(file) for file in source_files],
+            ] + [str(file.relative_to(root_dir)) for file in source_files],
             check=True,
             capture_output=True,
             text=True,
