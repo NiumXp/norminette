@@ -1,7 +1,7 @@
 name: Check I18N Changes
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - master
 
@@ -10,16 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout repository (PR branch)
+        uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y gettext
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -33,7 +34,7 @@ jobs:
         run: |
           poetry run python -m norminette.i18n
 
-      - name: Check for changes in .po files
+      - name: Check for uncommitted .po changes
         run: |
           if git diff --ignore-matching-lines='^"POT-Creation-Date:' -- '*.po' | grep -P '^[+-](?![+-]{2} [ab]/)' > /dev/null; then
             echo "Meaningful I18N changes detected. Please run 'python -m norminette/i18n.py' and commit the changes."
