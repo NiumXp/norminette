@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.3.58\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-09 21:44-0300\n"
+"POT-Creation-Date: 2025-04-11 10:12-0300\n"
 "PO-Revision-Date: 2025-04-09 17:51-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -78,7 +78,7 @@ msgid "bad spacing before pointer"
 msgstr ""
 
 #: norminette/norm_error.py:19
-msgid "space before function name"
+msgid "Found space when expecting tab before function name"
 msgstr ""
 
 #: norminette/norm_error.py:20

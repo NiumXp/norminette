@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.3.58\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-09 21:44-0300\n"
+"POT-Creation-Date: 2025-04-11 10:12-0300\n"
 "PO-Revision-Date: 2025-04-09 17:51-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -78,8 +78,8 @@ msgid "bad spacing before pointer"
 msgstr "Espaçamento incorreto antes do ponteiro"
 
 #: norminette/norm_error.py:19
-msgid "space before function name"
-msgstr "Espaço antes do nome da função"
+msgid "Found space when expecting tab before function name"
+msgstr "Espaço encontrado onde era esperada tabulação antes do nome da função"
 
 #: norminette/norm_error.py:20
 msgid "extra tabs before function name"
@@ -571,3 +571,6 @@ msgstr "Múltiplos pontos em constante float"
 #: norminette/norm_error.py:142
 msgid "Multiple 'x' in hexadecimal float constant"
 msgstr "Múltiplos 'x' em constante float hexadecimal"
+
+#~ msgid "space before function name"
+#~ msgstr "Espaço antes do nome da função"
