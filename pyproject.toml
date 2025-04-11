@@ -39,7 +39,7 @@ argparse = "^1.4.0"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.2"
 tox = "^4.6.0"
-flake8 = "^6.0.0"
+flake8 = ">=7,<8"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
