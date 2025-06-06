@@ -1,19 +1,18 @@
+import argparse
 import glob
-import sys
 import pathlib
 import platform
+import subprocess
+import sys
 from importlib.metadata import version
 
-import argparse
+from norminette.context import Context
 from norminette.errors import formatters
+from norminette.exceptions import CParsingError
 from norminette.file import File
 from norminette.lexer import Lexer
-from norminette.exceptions import CParsingError
 from norminette.registry import Registry
-from norminette.context import Context
 from norminette.tools.colors import colors
-
-import subprocess
 
 version_text = f"norminette {version('norminette')}"
 version_text += f", Python {platform.python_version()}"
