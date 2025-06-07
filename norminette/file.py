@@ -1,6 +1,5 @@
 import os
 from typing import Optional, Any, Sequence, overload, Tuple
-from functools import cached_property
 
 from norminette.errors import Errors
 from norminette.exceptions import MaybeInfiniteLoop
@@ -36,21 +35,28 @@ class _Line:
 class File:
     def __init__(self, path: str, source: Optional[str] = None) -> None:
         self.path = path
-        self._source = source
-        self._line_to_index = {}
+        # Please, do not set the source directly, use the setter.
+        self.source = source
 
         self.errors = Errors()
         self.basename = os.path.basename(path)
         self.name, self.type = os.path.splitext(self.basename)
 
-    @cached_property
+    @property
     def source(self) -> str:
         if self._source is None:
             with open(self.path) as file:
-                self._source = file.read()
-        lineno = 1
-        offset = None
+                self.source = file.read()
+        return self._source  # type: ignore[return-value]
+
+    @source.setter
+    def source(self, value: str | None) -> None:
+        self._source = value
+        if self._source is None:
+            return
         self._line_to_index = {1: 0}
+        lineno = 1
+        offset = 0
         for _ in range(max_loop_iterations):
             offset = self._source.find('\n', offset)
             if offset == -1:
@@ -60,7 +66,6 @@ class File:
             self._line_to_index[lineno] = offset
         else:
             raise MaybeInfiniteLoop()
-        return self._source
 
     def _line(self, lineno: int, /) -> Optional[_Line]:
         if lineno not in self._line_to_index:
