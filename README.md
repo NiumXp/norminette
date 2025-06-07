@@ -2,14 +2,13 @@
 
 ## Install
 
-Requires python3.8+ (3.8, 3.9, 3.10, 3.11)
+Norminette requires Python >=3.10.
 
 ### Directly inside your global commands
 
 Install using pip.
 ```shell
-python3 -m pip install --upgrade pip setuptools
-python3 -m pip install norminette
+python3 -m pip install -U norminette
 ```
 
 Install using pipx.
@@ -97,4 +96,29 @@ norminette
 
 # Run tests
 poetry run pytest
+```
+
+## Github action
+
+Workflow example to check code with github action :
+
+```yaml
+---
+name: Norminette
+
+on:
+  push:
+
+jobs:
+  check-norminette:
+    name: Norminette
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Norminette
+        uses: 42School/norminette@<tag>
+        with:
+          args: '-RCheckForbiddenSourceHeader'
 ```
