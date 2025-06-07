@@ -32,15 +32,6 @@ class Highlight:
     length: Optional[int] = field(default=None)
     hint: Optional[str] = field(default=None)
 
-    @classmethod
-    def from_token(
-        cls,
-        token: Token,
-        *,
-        hint: Optional[str] = None,
-    ) -> Highlight:
-        return cls(token.lineno, token.column, token.unsafe_length, hint)
-
     def __lt__(self, other: Any) -> bool:
         assert isinstance(other, Highlight)
         if self.lineno == other.lineno:
@@ -50,11 +41,17 @@ class Highlight:
         return self.lineno > other.lineno
 
     @classmethod
-    def from_token(cls, token: Token, /) -> Highlight:
+    def from_token(
+        cls,
+        token: Token,
+        /,
+        hint: str | None = None,
+    ) -> Highlight:
         return cls(
             lineno=token.lineno,
             column=token.column,
-            length=token.length,
+            length=token.unsafe_length,
+            hint=hint,
         )
 
 
