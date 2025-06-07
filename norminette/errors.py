@@ -193,8 +193,6 @@ class _formatter:
             name = name[:-len(suffix)]
         cls.name = name.lower()
 
-
-class HumanizedErrorsFormatter(_formatter):
     @property
     def use_colors(self) -> bool:
         return self.options.get("use_colors", True)
@@ -205,6 +203,8 @@ class HumanizedErrorsFormatter(_formatter):
             return error.text
         return f"\x1b[{color}m{error.text}\x1b[0m"
 
+
+class HumanizedErrorsFormatter(_formatter):
     def __str__(self) -> str:
         output = ''
         for file in self.files:
